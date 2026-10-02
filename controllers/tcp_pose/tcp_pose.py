@@ -1,52 +1,96 @@
+"""tcp_pose.py - Supervisor controller (Task 1.A/1.C).
+
+Waits for a *_ready_*.flag file written by an arm controller once the
+arm has settled, then measures the TCP position in the ARM frame and
+appends it to tcp_measurements.csv in the project root. Finally it
+deletes the flag, which tells the arm controller it may exit.
+
+The CSV file has the header:
+    arm,q1,q2,q3,x,y,z
+and is created automatically on first use. It can be read directly by
+the Task 1.C evaluation script to compare FK against Webots.
+"""
+
+import os
+
 from controller import Supervisor
+
+# Webots runs controllers with CWD = <project>/controllers/<name>/,
+# so "../../" reaches the project root. Everything is relative.
+ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+RESULTS_CSV = os.path.join(ROOT, "tcp_measurements.csv")
+
+FLAG_FILES = {
+    "_ready_ned.flag": "ned",
+    "_ready_scara.flag": "scara",
+}
+
+# Joint values are echoed into the CSV for convenience. They are read
+# from the flag file content, which the arm controller is expected to
+# fill as: "q1 q2 q3".
+
+
+def get_tcp_in_arm_frame(robot, arm_node):
+    """Return the TCP position (x, y, z) in the ARM frame."""
+    tcp = robot.getFromDef("TCP")
+
+    if tcp is None:
+        tcp_slot = arm_node.getField("tcpSlot")
+        if tcp_slot is None or tcp_slot.getCount() == 0:
+            return None
+        tcp = tcp_slot.getMFNode(0)
+
+    pose = tcp.getPose(arm_node)
+    # getPose returns a 16-element row-major 4x4 matrix;
+    # translation is stored at indices 3, 7 and 11.
+    return pose[3], pose[7], pose[11]
+
+
+def append_result(arm, joints, x, y, z):
+    """Append one measurement row, creating the CSV with header if needed."""
+    write_header = not os.path.exists(RESULTS_CSV)
+    with open(RESULTS_CSV, "a") as f:
+        if write_header:
+            f.write("arm,q1,q2,q3,x,y,z\n")
+        f.write(f"{arm},{joints[0]},{joints[1]},{joints[2]},{x},{y},{z}\n")
+
+
+# ------------------------------------------------------------------
+# Main loop
+# ------------------------------------------------------------------
 
 robot = Supervisor()
 timestep = int(robot.getBasicTimeStep())
 
-arm = robot.getFromDef("ARM")
-
-if arm is None:
+arm_node = robot.getFromDef("ARM")
+if arm_node is None:
     print("ERROR: Could not find DEF ARM")
     exit()
 
-# First try global DEF lookup
-tcp = robot.getFromDef("TCP")
-
-# If that fails, retrieve the first node from the tcpSlot field
-if tcp is None:
-    print("Could not find global DEF TCP. Trying ARM.tcpSlot instead...")
-
-    tcp_slot = arm.getField("tcpSlot")
-
-    if tcp_slot is None:
-        print("ERROR: ARM has no field called tcpSlot.")
-        print("This usually means the world is still using Ned, not TeachingNed,")
-        print("or the tcpSlot field was not added to the PROTO interface.")
-        exit()
-
-    if tcp_slot.getCount() == 0:
-        print("ERROR: ARM.tcpSlot exists but is empty.")
-        print("Add a TCP marker inside tcpSlot [ ... ] in the world file.")
-        exit()
-
-    tcp = tcp_slot.getMFNode(0)
-
-print("TCP node found.")
+print("Supervisor ready. Waiting for an arm controller to settle...")
 
 while robot.step(timestep) != -1:
-    x, y, z = tcp.getPosition()
-    print(f"TCP in world frame: x={x:.3f}, y={y:.3f}, z={z:.3f}")
+    for flag_name, arm in FLAG_FILES.items():
+        flag_path = os.path.join(ROOT, flag_name)
 
-    # 4x4 homogeneous transform of TCP relative to ARM
-    pose = tcp.getPose(arm)
+        if not os.path.exists(flag_path):
+            continue
 
-    # Webots returns it as:
-    # [ R00 R01 R02 Tx
-    #   R10 R11 R12 Ty
-    #   R20 R21 R22 Tz
-    #   0   0   0   1  ]
-    x = pose[3]
-    y = pose[7]
-    z = pose[11]
+        # Read the joint values the controller was given (optional).
+        try:
+            with open(flag_path) as f:
+                joints = [float(v) for v in f.read().split()[:3]]
+        except (ValueError, IndexError):
+            joints = [0.0, 0.0, 0.0]
 
-    print(f"TCP in ARM frame: x={x:.4f}, y={y:.4f}, z={z:.4f}")
+        position = get_tcp_in_arm_frame(robot, arm_node)
+        if position is None:
+            print(f"ERROR: no TCP node found for {arm}.")
+        else:
+            x, y, z = position
+            append_result(arm, joints, x, y, z)
+            print(f"[{arm}] joints={joints} -> TCP in ARM frame: "
+                  f"x={x:.5f}, y={y:.5f}, z={z:.5f}")
+
+        # Deleting the flag tells the arm controller we are done.
+        os.remove(flag_path)

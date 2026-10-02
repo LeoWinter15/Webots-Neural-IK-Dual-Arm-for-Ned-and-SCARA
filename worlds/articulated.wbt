@@ -33,11 +33,12 @@ DEF TARGET Pose {
 }
 Robot {
   name "position"
-  controller "<none>"
+  controller "tcp_pose"
   supervisor TRUE
 }
 DEF ARM TeachingNed {
   supervisor TRUE
+  controller "ned_simple"
   tcpSlot [
     DEF TCP Pose {
     }
