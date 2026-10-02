@@ -1,0 +1,93 @@
+# ------------------------------------------------------------
+# Python
+# ------------------------------------------------------------
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python packaging/build files
+build/
+dist/
+*.egg-info/
+
+
+# ------------------------------------------------------------
+# Jupyter / notebooks
+# ------------------------------------------------------------
+
+.ipynb_checkpoints/
+
+
+# ------------------------------------------------------------
+# Webots temporary and generated files
+# ------------------------------------------------------------
+
+*.log
+*.tmp
+*.bak
+
+# Webots may create backup worlds
+*.wbt.bak
+
+# Simulation recordings/videos can get large
+*.mp4
+*.avi
+*.mov
+*.webm
+
+# Screenshots
+*.png
+*.jpg
+*.jpeg
+
+
+# ------------------------------------------------------------
+# Machine learning generated files
+# ------------------------------------------------------------
+
+# Keep these ignored unless you explicitly want to submit/share trained models
+*.pkl
+*.pickle
+*.joblib
+*.npz
+
+# Training output folders
+runs/
+outputs/
+results/
+
+
+# ------------------------------------------------------------
+# IDE/editor files
+# ------------------------------------------------------------
+
+.vscode/
+.idea/
+
+# But allow useful shared VS Code recommendations/settings if needed
+!.vscode/extensions.json
+!.vscode/settings.json
+
+
+# ------------------------------------------------------------
+# Operating system files
+# ------------------------------------------------------------
+
+.DS_Store
+Thumbs.db
+
+
+# ------------------------------------------------------------
+# Temporary files
+# ------------------------------------------------------------
+
+*.swp
+*.swo
+*~

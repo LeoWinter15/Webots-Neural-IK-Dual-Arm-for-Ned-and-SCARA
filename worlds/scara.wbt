@@ -1,0 +1,32 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/epson/scara_t6/protos/ScaraT6.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.03219161520108626 -0.021763065329657126 0.9992447492472514 4.103453330185252
+  position 1.958304037130277 3.027942221754131 0.47471059290904066
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+}
+Robot {
+  name "position"
+  controller "tcp_pose"
+  supervisor TRUE
+}
+DEF ARM ScaraT6 {
+  controller "scara_simple"
+  staticBase TRUE
+  handSlot [
+    DEF TCP Pose {
+    }
+  ]
+}

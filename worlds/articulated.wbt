@@ -1,0 +1,45 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "../protos/TeachingNed.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.10517262333063286 0.02475669725953022 -0.9941457766557945 2.6818128601065747
+  position 2.7516931443891672 1.2628321196912256 0.8961155183003242
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+}
+DEF TARGET Pose {
+  translation 0.15 0.25 0.25
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 0
+        roughness 0.5
+      }
+      geometry Sphere {
+        radius 0.025
+      }
+    }
+  ]
+}
+Robot {
+  name "position"
+  controller "<none>"
+  supervisor TRUE
+}
+DEF ARM TeachingNed {
+  supervisor TRUE
+  tcpSlot [
+    DEF TCP Pose {
+    }
+  ]
+}
