@@ -39,6 +39,7 @@ Robot {
 DEF ARM TeachingNed {
   supervisor TRUE
   controller "ned_simple"
+  controllerArgs ["-2.2" "-0.6" "0.2"]
   tcpSlot [
     DEF TCP Pose {
     }

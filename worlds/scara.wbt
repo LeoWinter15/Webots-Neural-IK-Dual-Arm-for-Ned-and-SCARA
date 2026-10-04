@@ -24,6 +24,7 @@ Robot {
 }
 DEF ARM ScaraT6 {
   controller "scara_simple"
+  controllerArgs ["-0.65" "0.1" "-0.18"]
   staticBase TRUE
   handSlot [
     DEF TCP Pose {
