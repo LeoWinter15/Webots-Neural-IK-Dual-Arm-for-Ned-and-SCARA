@@ -5,5 +5,5 @@ sceneTreePerspectives: 000000ff000000010000000300000025000000c0000000fa010000000
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 0 "controllers/ned_sphere_ik/ned_sphere_ik.py"
+textFiles: 0 "../../nn-ik-master_T2/controllers/ned_sphere_ik/ned_sphere_ik.py"
 consoles: Console:All:All

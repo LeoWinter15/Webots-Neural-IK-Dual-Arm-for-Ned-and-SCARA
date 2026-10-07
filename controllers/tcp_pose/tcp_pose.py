@@ -12,6 +12,7 @@ the Task 1.C evaluation script to compare FK against Webots.
 """
 
 import os
+import math
 
 from controller import Supervisor
 
@@ -79,9 +80,13 @@ while robot.step(timestep) != -1:
         # Read the joint values the controller was given (optional).
         try:
             with open(flag_path) as f:
-                joints = [float(v) for v in f.read().split()[:3]]
+                joints = [float(v) for v in f.read().split()]
+            if len(joints) != 3 or not all(math.isfinite(v) for v in joints):
+                raise ValueError("Expected three finite joints")
         except (ValueError, IndexError):
-            joints = [0.0, 0.0, 0.0]
+            print(f"ERROR: malformed request for {arm}; measurement rejected.")
+            os.remove(flag_path)
+            continue
 
         position = get_tcp_in_arm_frame(robot, arm_node)
         if position is None:

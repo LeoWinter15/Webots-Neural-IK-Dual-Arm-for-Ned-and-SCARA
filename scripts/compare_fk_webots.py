@@ -14,6 +14,11 @@ Only the Python standard library is used.
 """
 
 import math
+import json
+import hashlib
+import shutil
+from pathlib import Path
+from datetime import datetime, timezone
 import os
 import sys
 
@@ -57,10 +62,14 @@ def main():
         print("No measurements found in CSV.")
         sys.exit(1)
 
+    summaries = {}
     for arm, rows in errors.items():
         errs = [r[3] for r in rows]
         mean = sum(errs) / len(errs)
         std = math.sqrt(sum((e - mean) ** 2 for e in errs) / len(errs))
+        summaries[arm] = {"count": len(rows), "mean_m": mean, "std_m": std,
+                          "max_m": max(errs),
+                          "joint_values_tested": [sorted(set(row[0][i] for row in rows)) for i in range(3)]}
         print(f"\n=== {arm.upper()} ({len(rows)} samples) ===")
         print(f"mean error = {mean * 1000:.3f} mm | "
               f"std = {std * 1000:.3f} mm | max = {max(errs) * 1000:.3f} mm")
@@ -69,6 +78,23 @@ def main():
             print(f"    webots: {[round(v, 5) for v in measured]}")
             print(f"    FK    : {[round(v, 5) for v in predicted]}"
                   f"   err = {err * 1000:.3f} mm")
+
+    # Keep the original measurement evidence with a hash and full-precision summary.
+    digest = hashlib.sha256(Path(csv_path).read_bytes()).hexdigest()
+    destination = Path(SCRIPT_DIR).parent / "results" / "task1" / digest[:12]
+    destination.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(csv_path, destination / "tcp_measurements.csv")
+    report = {
+        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "measurements_sha256": digest,
+        "coordinate_frame": "ARM", "position_unit": "m", "std_ddof": 0,
+        "provenance_note": "Legacy CSV contains commanded joints; historical settled status and actual joints are not recorded.",
+        "robots": summaries,
+        "fk_source_sha256": {name: hashlib.sha256((Path(SCRIPT_DIR) / name).read_bytes()).hexdigest()
+                             for name in ("fk_ned.py", "fk_scara.py")},
+    }
+    (destination / "summary.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    print(f"\nSaved measurement snapshot and summary: {destination}")
 
 
 if __name__ == "__main__":

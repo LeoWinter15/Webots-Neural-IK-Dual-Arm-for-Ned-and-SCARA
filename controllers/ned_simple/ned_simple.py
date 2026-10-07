@@ -14,6 +14,9 @@ Handshake protocol (via files in the project root, no hardcoded paths):
 """
 
 import os
+import json
+import math
+from datetime import datetime, timezone
 import sys
 
 from controller import Robot
@@ -60,6 +63,8 @@ def clip_to_limits(values):
     """Clamp each joint into its limits and warn if clipping occurred."""
     clipped = []
     for name, value in zip(MOTOR_NAMES, values):
+        if not math.isfinite(value):
+            raise ValueError(f"Non-finite target for {name}")
         low, high = JOINT_LIMITS[name]
         if not (low <= value <= high):
             print(f"WARNING: {name}={value:.4f} outside [{low}, {high}], clipped.")
@@ -102,6 +107,7 @@ if os.path.exists(READY_FLAG):
 stable_count = 0
 start_time = robot.getTime()
 settled = False
+failure_reason = "simulation_ended"
 
 while robot.step(timestep) != -1:
     errors = [abs(t - s.getValue()) for t, s in zip(targets, sensors)]
@@ -116,16 +122,32 @@ while robot.step(timestep) != -1:
         break
 
     if robot.getTime() - start_time > TIMEOUT:
-        print("WARNING: settle wait timed out, signalling anyway.")
+        failure_reason = "settle_timeout"
+        print("ERROR: settle wait timed out; measurement rejected.")
         break
+
+if not settled:
+    # Failed motion must never enter the valid TCP measurement CSV.
+    actual = [sensor.getValue() for sensor in sensors]
+    event = {
+        "utc": datetime.now(timezone.utc).isoformat(),
+        "arm": "ned", "status": failure_reason,
+        "target_joints": targets,
+        "actual_joints": [v if math.isfinite(v) else None for v in actual],
+        "elapsed_s": robot.getTime() - start_time,
+    }
+    with open(os.path.join(ROOT, "motion_failures.jsonl"), "a", encoding="utf-8") as stream:
+        stream.write(json.dumps(event, allow_nan=False) + "\n")
+    sys.exit(1)
 
 if settled:
     print(f"Arm settled after {robot.getTime() - start_time:.2f} s "
           f"(max residual error {max(errors):.5f} rad).")
 
 # Signal the supervisor that the TCP can now be measured.
-with open(READY_FLAG, "w") as f:
+with open(READY_FLAG + ".tmp", "w") as f:
     f.write(f"{targets[0]} {targets[1]} {targets[2]}\n")
+os.replace(READY_FLAG + ".tmp", READY_FLAG)
 print("Flag written, waiting for supervisor to measure the TCP...")
 
 # Wait until the supervisor has consumed the flag, then exit.

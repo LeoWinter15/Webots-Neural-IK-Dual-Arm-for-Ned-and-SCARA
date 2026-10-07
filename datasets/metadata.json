@@ -1,0 +1,168 @@
+{
+  "config_version": "physical_limits_v1",
+  "created_utc": "2026-09-28T19:02:08.246922+00:00",
+  "coordinate_frame": "ARM",
+  "coordinate_units": "m",
+  "robots": {
+    "ned": {
+      "joint_names": [
+        "joint_1",
+        "joint_2",
+        "joint_3"
+      ],
+      "units": [
+        "rad",
+        "rad",
+        "rad"
+      ],
+      "sampling_limits": [
+        [
+          -2.8,
+          2.8
+        ],
+        [
+          -0.8,
+          0.8
+        ],
+        [
+          0.0,
+          1.3
+        ]
+      ],
+      "normalisation_limits": [
+        [
+          -2.8,
+          2.8
+        ],
+        [
+          -0.8,
+          0.8
+        ],
+        [
+          -1.5,
+          1.3
+        ]
+      ],
+      "positive_elbow_index": 2
+    },
+    "scara": {
+      "joint_names": [
+        "base_arm_motor",
+        "arm_motor",
+        "shaft_linear_motor"
+      ],
+      "units": [
+        "rad",
+        "rad",
+        "m"
+      ],
+      "sampling_limits": [
+        [
+          -0.73,
+          0.73
+        ],
+        [
+          0.0,
+          0.83
+        ],
+        [
+          -0.2,
+          0.0
+        ]
+      ],
+      "normalisation_limits": [
+        [
+          -0.73,
+          0.73
+        ],
+        [
+          -0.83,
+          0.83
+        ],
+        [
+          -0.2,
+          0.0
+        ]
+      ],
+      "positive_elbow_index": 1
+    }
+  },
+  "sizes_before_split": [
+    1000,
+    5000,
+    20000
+  ],
+  "train_fraction": 0.8,
+  "test_size_per_arm": 500,
+  "seeds": {
+    "ned": 42,
+    "scara": 43
+  },
+  "sampling": "independent uniform joints; elbow strictly positive",
+  "nesting": "prefixes within separate train and validation pools",
+  "test_policy": "disjoint held-out; frozen order; first 100 for Task 4.B",
+  "files": {
+    "ned_train_1000.csv": {
+      "sha256": "2812e19d5520ad4dad684999d2292fd793e68d4bbfb262fd565f25eb97993bdf",
+      "rows": 800
+    },
+    "ned_train_5000.csv": {
+      "sha256": "280e8a8e742c5fda7675e8c2627d901ac23fc9f3db07282d878109ca636cf80d",
+      "rows": 4000
+    },
+    "ned_train_20000.csv": {
+      "sha256": "dff330a88e1adbebb30e2494708f7e116affeb5572f57d8e643195c54ac7596d",
+      "rows": 16000
+    },
+    "ned_validation_1000.csv": {
+      "sha256": "b91bd8795c8e891b9bea89ac524bcff2af7d61137757f9bcc9e6057bbc0c5d70",
+      "rows": 200
+    },
+    "ned_validation_5000.csv": {
+      "sha256": "91d2a3b0746045942daebee683c5ccb37fe3d57f7a83ac82f49af03e871cdf30",
+      "rows": 1000
+    },
+    "ned_validation_20000.csv": {
+      "sha256": "c06f87363bb04e411ae33a492b678963196f7506d5c1372e2220fc3a8c56135e",
+      "rows": 4000
+    },
+    "scara_train_1000.csv": {
+      "sha256": "ece519945569f3f4f3d8850ea90821a56a5c06c6c342955fd656a0bda1ec4685",
+      "rows": 800
+    },
+    "scara_train_5000.csv": {
+      "sha256": "10ea647cdf37eb8fde0817194c367cdffada0a7c86aa3e68e5a694ddc7f7550b",
+      "rows": 4000
+    },
+    "scara_train_20000.csv": {
+      "sha256": "10ba50fa585a5428d5691a64002c8960d3185a3a15327bd1faa08b14dfd56bf0",
+      "rows": 16000
+    },
+    "scara_validation_1000.csv": {
+      "sha256": "c9288504389970188244d6ef85fb1ab09a4be478896c46c9282e94dffee90fdd",
+      "rows": 200
+    },
+    "scara_validation_5000.csv": {
+      "sha256": "6451d3277bb57858490d7d216f5708df56cf85ab3e032072abb7c2e18433e5be",
+      "rows": 1000
+    },
+    "scara_validation_20000.csv": {
+      "sha256": "7eefff796dff10461c7a7033e4115604e3b53a8f1ac659edda871d9e5a5b41e7",
+      "rows": 4000
+    },
+    "ned_test.csv": {
+      "sha256": "d3f5ae4a775dadb98284816a26e98ce7357b93f015e173dfd5141dc298f3ec6a",
+      "rows": 500
+    },
+    "scara_test.csv": {
+      "sha256": "8933ed677fc85fa5e65a1dcca2932109842abe8d2a02e284fcfcbd611eabe9f3",
+      "rows": 500
+    }
+  },
+  "source_sha256": {
+    "robot_config.py": "eebd37a48c7daed437e126494c38068ec91810338776974f601de59f48d113bd",
+    "generate_datasets.py": "e326afe31d595b981f482982fb181367ece7e88fbd0c55664e2f2ef83aff5417",
+    "fk_ned.py": "cfd57d50ba166d008115c0fd4f3dca666923887ae15015c2482c1657566cc6de",
+    "fk_scara.py": "c97ccd6cd2de3ba678a3814fe6d1397c5384d9e2733a12b8cf575dcd2cf601c7"
+  }
+}
