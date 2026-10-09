@@ -1,0 +1,244 @@
+{
+  "format_version": 1,
+  "config_version": "physical_limits_v1",
+  "robots": {
+    "ned": {
+      "joint_names": [
+        "joint_1",
+        "joint_2",
+        "joint_3"
+      ],
+      "units": [
+        "rad",
+        "rad",
+        "rad"
+      ],
+      "sampling_limits": [
+        [
+          -2.8,
+          2.8
+        ],
+        [
+          -0.8,
+          0.8
+        ],
+        [
+          0.0,
+          1.3
+        ]
+      ],
+      "normalisation_limits": [
+        [
+          -2.8,
+          2.8
+        ],
+        [
+          -0.8,
+          0.8
+        ],
+        [
+          -1.5,
+          1.3
+        ]
+      ],
+      "positive_elbow_index": 2
+    },
+    "scara": {
+      "joint_names": [
+        "base_arm_motor",
+        "arm_motor",
+        "shaft_linear_motor"
+      ],
+      "units": [
+        "rad",
+        "rad",
+        "m"
+      ],
+      "sampling_limits": [
+        [
+          -0.73,
+          0.73
+        ],
+        [
+          0.0,
+          0.83
+        ],
+        [
+          -0.2,
+          0.0
+        ]
+      ],
+      "normalisation_limits": [
+        [
+          -0.73,
+          0.73
+        ],
+        [
+          -0.83,
+          0.83
+        ],
+        [
+          -0.2,
+          0.0
+        ]
+      ],
+      "positive_elbow_index": 1
+    }
+  },
+  "inputs": [
+    "is_scara",
+    "is_ned",
+    "x",
+    "y",
+    "z"
+  ],
+  "outputs": [
+    "q1_norm",
+    "q2_norm",
+    "q3_norm"
+  ],
+  "hidden": [
+    64,
+    64
+  ],
+  "activation": "tanh_all_layers",
+  "output_policy": "tanh; no clipping or elbow projection",
+  "coordinate_frame": "ARM",
+  "coordinate_units": "m",
+  "size_per_arm_before_split": 1000,
+  "model_label": "small",
+  "seed": 42,
+  "loss": "mean_squared_error_all_outputs",
+  "optimiser": "Adam",
+  "adam_beta1": 0.9,
+  "adam_beta2": 0.999,
+  "adam_epsilon": 1e-08,
+  "batch_size": 256,
+  "epochs_max": 500,
+  "patience": 60,
+  "min_delta": 1e-07,
+  "train_samples": 1600,
+  "validation_samples": 400,
+  "scaler_fit": "combined training xyz only; flags unchanged",
+  "selected": {
+    "learning_rate": 0.003,
+    "epochs_run": 500,
+    "best_epoch": 483,
+    "stop_reason": "epoch_limit",
+    "seconds": 5.376205699998536,
+    "validation": {
+      "normalised_mse": 0.0021249866324645084,
+      "ned": {
+        "samples": 200,
+        "normalised_mse": 0.0017429106960493912,
+        "normalised_mae_per_joint": [
+          0.02623824376989976,
+          0.041704664042842926,
+          0.024805359771857077
+        ],
+        "nonpositive_elbow_predictions": 0
+      },
+      "scara": {
+        "samples": 200,
+        "normalised_mse": 0.0025070625688796257,
+        "normalised_mae_per_joint": [
+          0.045580144241009986,
+          0.035330944700356574,
+          0.03499311012248121
+        ],
+        "nonpositive_elbow_predictions": 0
+      }
+    },
+    "history_file": "small_candidate_2_history.csv"
+  },
+  "candidates": [
+    {
+      "learning_rate": 0.001,
+      "epochs_run": 500,
+      "best_epoch": 492,
+      "stop_reason": "epoch_limit",
+      "seconds": 5.233412599998701,
+      "validation": {
+        "normalised_mse": 0.0030087920478902284,
+        "ned": {
+          "samples": 200,
+          "normalised_mse": 0.002955077855106794,
+          "normalised_mae_per_joint": [
+            0.03846946727845126,
+            0.04823976352083314,
+            0.025171590808776005
+          ],
+          "nonpositive_elbow_predictions": 3
+        },
+        "scara": {
+          "samples": 200,
+          "normalised_mse": 0.003062506240673662,
+          "normalised_mae_per_joint": [
+            0.0458297733192025,
+            0.03504001727546331,
+            0.04660095950594885
+          ],
+          "nonpositive_elbow_predictions": 0
+        }
+      },
+      "history_file": "small_candidate_1_history.csv"
+    },
+    {
+      "learning_rate": 0.003,
+      "epochs_run": 500,
+      "best_epoch": 483,
+      "stop_reason": "epoch_limit",
+      "seconds": 5.376205699998536,
+      "validation": {
+        "normalised_mse": 0.0021249866324645084,
+        "ned": {
+          "samples": 200,
+          "normalised_mse": 0.0017429106960493912,
+          "normalised_mae_per_joint": [
+            0.02623824376989976,
+            0.041704664042842926,
+            0.024805359771857077
+          ],
+          "nonpositive_elbow_predictions": 0
+        },
+        "scara": {
+          "samples": 200,
+          "normalised_mse": 0.0025070625688796257,
+          "normalised_mae_per_joint": [
+            0.045580144241009986,
+            0.035330944700356574,
+            0.03499311012248121
+          ],
+          "nonpositive_elbow_predictions": 0
+        }
+      },
+      "history_file": "small_candidate_2_history.csv"
+    }
+  ],
+  "datasets": {
+    "ned_train_1000.csv": {
+      "sha256": "2812e19d5520ad4dad684999d2292fd793e68d4bbfb262fd565f25eb97993bdf",
+      "rows": 800
+    },
+    "ned_validation_1000.csv": {
+      "sha256": "b91bd8795c8e891b9bea89ac524bcff2af7d61137757f9bcc9e6057bbc0c5d70",
+      "rows": 200
+    },
+    "scara_train_1000.csv": {
+      "sha256": "ece519945569f3f4f3d8850ea90821a56a5c06c6c342955fd656a0bda1ec4685",
+      "rows": 800
+    },
+    "scara_validation_1000.csv": {
+      "sha256": "c9288504389970188244d6ef85fb1ab09a4be478896c46c9282e94dffee90fdd",
+      "rows": 200
+    }
+  },
+  "source_sha256": {
+    "ann_model.py": "276ef8420e987db91a10f95f89adabd6cef1ebefe14f68ef5f1e2ce5c7d2cde9",
+    "train_ann.py": "0aaf4d71862ad4f89a92f03bb65dacbc8d9d828f9bbf132b580f4c581e787233",
+    "robot_config.py": "eebd37a48c7daed437e126494c38068ec91810338776974f601de59f48d113bd"
+  },
+  "python": "3.11.5",
+  "numpy": "2.4.6",
+  "test_sets_used": false
+}

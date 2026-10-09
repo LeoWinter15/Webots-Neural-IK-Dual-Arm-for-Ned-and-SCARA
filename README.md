@@ -3,6 +3,9 @@
 Project structure and how to run each part (Python 3, Webots R2023b;
 libraries used: standard library + numpy + scikit-learn only).
 
+Task 3 is implemented in this folder using **NumPy + the standard library only**.
+See [TASK3.md](TASK3.md) for training, model files, prediction, and verification.
+
 ## Task 1.A - Webots controllers
 
 Two arm controllers that accept joint values, move the arm, wait for it
