@@ -1,0 +1,30 @@
+#VRML_SIM R2023b utf8
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/robots/epson/scara_t6/protos/ScaraT6.proto"
+WorldInfo {
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation -0.03219 -0.02176 0.99924 4.10345
+  position 1.95830 3.02794 0.47471
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+# Shaft extends below the base frame; floor clearance avoids Task 1 collision.
+Floor {
+  translation 0 0 -0.4
+}
+DEF ARM ScaraT6 {
+  supervisor TRUE
+  controller "task4b_runner"
+  controllerArgs [ "scara" ]
+  staticBase TRUE
+  handSlot [
+    DEF TCP Pose {
+    }
+  ]
+}

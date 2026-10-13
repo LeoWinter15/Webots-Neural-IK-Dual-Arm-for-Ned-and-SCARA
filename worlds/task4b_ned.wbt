@@ -1,0 +1,29 @@
+#VRML_SIM R2023b utf8
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/Floor.proto"
+EXTERNPROTO "../protos/TeachingNed.proto"
+WorldInfo {
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation 0.10517 0.02476 -0.99415 2.68181
+  position 2.75169 1.26283 0.89612
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+# Lower the floor for unrestricted coursework motion; the base is static.
+Floor {
+  translation 0 0 -0.4
+}
+DEF ARM TeachingNed {
+  supervisor TRUE
+  controller "task4b_runner"
+  controllerArgs [ "ned" ]
+  tcpSlot [
+    DEF TCP Pose {
+    }
+  ]
+}

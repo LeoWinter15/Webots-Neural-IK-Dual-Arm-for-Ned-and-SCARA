@@ -10,6 +10,12 @@ Task 4.A evaluates the saved models on both held-out test sets using Task 1 FK.
 See [TASK4A.md](TASK4A.md) or [中文说明](TASK4A_zh.md). Run
 `python scripts/evaluate_ann.py`, then `python scripts/verify_task4a.py`.
 
+Task 4.B batch worlds and controllers are prepared. See
+[Task 4.B Webots 操作指南](TASK4B_zh.md). Open `worlds/task4b_ned.wbt`
+and `worlds/task4b_scara.wbt` in turn and run each to completion, then run
+`python scripts/summarize_task4b.py`. Real Webots measurements are required;
+mocked controller tests do not complete this task.
+
 ## Task 1.A - Webots controllers
 
 Two arm controllers that accept joint values, move the arm, wait for it
