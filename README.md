@@ -6,6 +6,10 @@ libraries used: standard library + numpy + scikit-learn only).
 Task 3 is implemented in this folder using **NumPy + the standard library only**.
 See [TASK3.md](TASK3.md) for training, model files, prediction, and verification.
 
+Task 4.A evaluates the saved models on both held-out test sets using Task 1 FK.
+See [TASK4A.md](TASK4A.md) or [中文说明](TASK4A_zh.md). Run
+`python scripts/evaluate_ann.py`, then `python scripts/verify_task4a.py`.
+
 ## Task 1.A - Webots controllers
 
 Two arm controllers that accept joint values, move the arm, wait for it
